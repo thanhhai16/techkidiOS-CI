@@ -13,8 +13,10 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 1 cast view to skview
+        // 1 cast view to skview and configure view
         let skView = self.view as! SKView
+        skView.showsNodeCount = true
+        skView.showsFPS = true
         2// creat game scene
         let gameScene = GameScene(size: skView.frame.size)
         3// present gameScene
