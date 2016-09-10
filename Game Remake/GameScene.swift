@@ -115,33 +115,33 @@ class GameScene: SKScene {
         
     }
     func addEnemys() {
-        let addEnemy = SKAction.runBlock {
-            // 1 Add enemy
-            self.enemy = SKSpriteNode(imageNamed: "enemy_plane_white_1.png")
-            
-            // 2 Set enemy position
-            let PlaneX = UInt32(CGRectGetMaxX(self.frame))
-            let randomX = CGFloat(arc4random_uniform(PlaneX))
-            self.enemy.position.x = randomX
-            self.enemy.position.y = self.frame.size.height
-            
-            // 3 move Enemy
-            let moveEnemy = SKAction.moveByX(0, y: -10, duration: 0.2)
-            self.enemy.runAction(SKAction.repeatActionForever(moveEnemy))
-            
-            // 4 Shot
-            self.enemys.append(self.enemy)
-            let enemyShot = SKAction.runBlock{
-                self.addEnemyBullet()
-            }
-            let enemyShotPeriod = SKAction.sequence([enemyShot, SKAction.waitForDuration(0.5)])
-            self.enemy.runAction(SKAction.repeatActionForever(enemyShotPeriod))
-            // 5
-            self.addChild(self.enemy)
-        }
+        //let addEnemy = SKAction.runBlock {
+        // 1 Add enemy
+        self.enemy = SKSpriteNode(imageNamed: "enemy_plane_white_1.png")
         
-        let enemyPeriod = SKAction.sequence([addEnemy, SKAction.waitForDuration(5)])
-        self.runAction(SKAction.repeatActionForever(enemyPeriod))
+        // 2 Set enemy position
+        let PlaneX = UInt32(CGRectGetMaxX(self.frame))
+        let randomX = CGFloat(arc4random_uniform(PlaneX))
+        self.enemy.position.x = randomX
+        self.enemy.position.y = self.frame.size.height
+        
+        // 3 move Enemy
+        let moveEnemy = SKAction.moveByX(0, y: -10, duration: 0.2)
+        self.enemy.runAction(SKAction.repeatActionForever(moveEnemy))
+        
+        // 4 Shot
+        self.enemys.append(self.enemy)
+        let enemyShot = SKAction.runBlock{
+            self.addEnemyBullet()
+        }
+        let enemyShotPeriod = SKAction.sequence([enemyShot, SKAction.waitForDuration(1)])
+        self.enemy.runAction(SKAction.repeatActionForever(enemyShotPeriod))
+        // 5
+        self.addChild(self.enemy)
+        //}
+        
+        //let enemyPeriod = SKAction.sequence([addEnemy, SKAction.waitForDuration(3)])
+        //self.runAction(SKAction.repeatActionForever(enemyPeriod))
         
         
         
@@ -160,9 +160,23 @@ class GameScene: SKScene {
         self.addChild(enemyBullet)
         
         // 4
-        let fly = SKAction.moveByX(0, y: -20, duration: 0.1)
-        enemyBullet.runAction(SKAction.repeatActionForever(fly))
-        self.enemyBullets.append(enemyBullet)
+        if enemyBullet.position != self.plane.position {
+            
+            let moveto = SKAction.runBlock {
+                
+                
+                let fly = SKAction.moveTo(self.plane.position, duration: NSTimeInterval (self.plane.position.distance(enemyBullet.position)/100))
+                enemyBullet.runAction(SKAction.repeatActionForever(fly))
+                self.enemyBullets.append(enemyBullet)
+            }
+            
+            let moveToPeriod = SKAction.sequence([moveto, SKAction.waitForDuration(0.1)])
+            enemyBullet.runAction(SKAction.repeatActionForever(moveToPeriod))
+        }
+        else {
+            
+        }
+        
     }
     
 }
